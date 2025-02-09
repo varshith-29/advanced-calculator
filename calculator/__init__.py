@@ -1,4 +1,4 @@
-from operations import add, subtract, multiply, divide
+from .operations import add, subtract, multiply, divide
 class Calculator:
     @staticmethod
     def add(a: float, b: float) -> float:
