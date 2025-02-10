@@ -1,23 +1,30 @@
+# pylint: disable=unnecessary-dunder-call, invalid-name
 from decimal import Decimal
-from typing import Callable
-from calculator.operations import add, subtract, multiply, divide
-from calculator.operations import add_operands, subtract_operands, multiply_operands, divide_operands
+from typing import Callable, Any
 
-
-class CalcOperation:
-    def __init__(self, operand1: Decimal, operand2: Decimal, operation: Callable[[Decimal, Decimal], Decimal]):
-        self.operand1 = operand1
-        self.operand2 = operand2
-        self.operation = operation
+class Calculation:
+    """Handles individual calculations"""
     
-    @staticmethod    
-    def create_operation(operand1: Decimal, operand2: Decimal, operation: Callable[[Decimal, Decimal], Decimal]):
-        return CalcOperation(operand1, operand2, operation)
+    def __init__(self, a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]) -> None:
+        self.a = a
+        self.b = b
+        self.operation = operation
+        self._result: Decimal | None = None
 
-    def execute(self) -> Decimal:
-        """Execute the stored operation and return the result."""
-        return self.operation(self.operand1, self.operand2)
+    @classmethod
+    def create(cls, a: Decimal, b: Decimal, operation: Callable[[Decimal, Decimal], Decimal]) -> 'Calculation':
+        """Factory method to create a new calculation"""
+        return cls(a, b, operation)
 
-    def __repr__(self):
-        """Return a user-friendly string representation of the operation."""
-        return f"CalcOperation({self.operand1}, {self.operand2}, {self.operation.__name__})"
+    def perform(self) -> Decimal:
+        """Executes the calculation and stores the result"""
+        self._result = self.operation(self.a, self.b)
+        return self._result
+
+    @property
+    def result(self) -> Decimal:
+        """Returns the calculation result"""
+        if self._result is None:
+            self.perform()
+        return self._result
+    

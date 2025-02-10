@@ -1,28 +1,36 @@
+# tests/test_calculation.py
+"""Tests for the Calculation class"""
 from decimal import Decimal
 import pytest
-from calculator.calculation import CalcOperation
-from calculator.operations import add_operands, subtract_operands, multiply_operands, divide_operands
+from calculator.calculation import Calculation
+from calculator.operations import add, subtract, multiply, divide
 
-@pytest.mark.parametrize("operand1, operand2, operation, expected_result", [
-    (Decimal('20'), Decimal('4'), add_operands, Decimal('24')),
-    (Decimal('20'), Decimal('4'), subtract_operands, Decimal('16')),
-    (Decimal('20'), Decimal('4'), multiply_operands, Decimal('80')),
-    (Decimal('20'), Decimal('4'), divide_operands, Decimal('5')),
-    (Decimal('15.5'), Decimal('1.5'), add_operands, Decimal('17.0')),
-    (Decimal('15.5'), Decimal('1.5'), subtract_operands, Decimal('14.0')),
-    (Decimal('15.5'), Decimal('3'), multiply_operands, Decimal('46.5')),
-    (Decimal('20'), Decimal('4'), divide_operands, Decimal('5')),
+@pytest.mark.parametrize("first_number, second_number, operation, expected", [
+    (Decimal('10'), Decimal('5'), add, Decimal('15')),
+    (Decimal('10'), Decimal('5'), subtract, Decimal('5')),
+    (Decimal('10'), Decimal('5'), multiply, Decimal('50')),
+    (Decimal('10'), Decimal('5'), divide, Decimal('2')),
 ])
-def test_arithmetic_operations(operand1, operand2, operation, expected_result):
-    operation_instance = CalcOperation(operand1, operand2, operation)
-    assert operation_instance.execute() == expected_result
+def test_calculation_operations(first_number, second_number, operation, expected):
+    """Testing various calculation operations"""
+    calculation = Calculation(first_number, second_number, operation)
+    result = calculation.perform()
+    assert result == expected
+    assert calculation.result == expected
 
-def test_calculation_repr():
-    operation_instance = CalcOperation(Decimal('20'), Decimal('4'), add_operands)
-    expected_string = "CalcOperation(20, 4, add_operands)"
-    assert operation_instance.__repr__() == expected_string
+def test_calculation_create():
+    """Test the create class method"""
+    first_number, second_number = Decimal('10'), Decimal('5')
+    calculation = Calculation.create(first_number, second_number, add)
+    assert isinstance(calculation, Calculation)
+    assert calculation.a == first_number
+    assert calculation.b == second_number
+    assert calculation.operation(first_number, second_number) == add(first_number, second_number)
 
-def test_division_by_zero():
-    operation_instance = CalcOperation(Decimal('20'), Decimal('0'), divide_operands)
-    with pytest.raises(ValueError, match="Cannot divide by zero"):
-        operation_instance.execute()
+def test_calculation_result_property():
+    """Test the result property of calculation"""
+    calculation = Calculation(Decimal('10'), Decimal('5'), add)
+    assert calculation._result is None  # pylint: disable=protected-access
+    result = calculation.result
+    assert result == Decimal('15')
+    assert calculation._result == Decimal('15')  # pylint: disable=protected-access

@@ -1,34 +1,29 @@
-from decimal import Decimal
-from typing import Callable, List
+from typing import List
+from .calculation import Calculation
 
-from calculator.calculation import Calculation
-
-class CalculationHistory:
-    history_list: List[Calculation] = []
-
-    @classmethod
-    def record_calculation(cls, calc: Calculation):
-        """Record a new calculation in the history."""
-        cls.history_list.append(calc)
+class Calculations:
+    """Manages the history of calculations"""
+    history: List[Calculation] = []
 
     @classmethod
-    def get_all_history(cls) -> List[Calculation]:
-        """Retrieve all past calculations from the history."""
-        return cls.history_list
+    def add_calculation(cls, calculation: Calculation) -> None:
+        """Adds a calculation to history"""
+        cls.history.append(calculation)
 
     @classmethod
-    def reset_history(cls):
-        """Clear all records from the calculation history."""
-        cls.history_list.clear()
+    def get_latest(cls) -> Calculation:
+        """Returns the most recent calculation"""
+        if not cls.history:
+            raise ValueError("No calculations in history")
+        return cls.history[-1]
 
     @classmethod
-    def get_most_recent(cls) -> Calculation:
-        """Retrieve the most recent calculation. Returns None if the history is empty."""
-        if cls.history_list:
-            return cls.history_list[-1]
-        return None
+    def clear_history(cls) -> None:
+        """Clears the calculation history"""
+        cls.history.clear()
 
     @classmethod
-    def search_by_operation(cls, operation: str) -> List[Calculation]:
-        """Search and return a list of calculations matching the given operation name."""
-        return [calc for calc in cls.history_list if calc.operation.__name__ == operation]
+    def get_history(cls) -> List[Calculation]:
+        """Returns the full calculation history"""
+        return cls.history.copy()
+    

@@ -1,25 +1,24 @@
+"""Tests for the operations module"""
 from decimal import Decimal
-import pytest # type: ignore
-from calculator.calculation import CalcOperation
-from calculator.operations import add_operands, subtract_operands, multiply_operands, divide_operands
+import pytest
+from calculator.operations import add, subtract, multiply, divide
 
-def test_addition_operation():
-    calc = CalcOperation(Decimal('25'), Decimal('10'), add_operands)
-    assert calc.execute() == Decimal('35')
+@pytest.mark.parametrize("operation, first_number, second_number, expected", [
+    (add, Decimal('10'), Decimal('5'), Decimal('15')),
+    (add, Decimal('-10'), Decimal('5'), Decimal('-5')),
+    (subtract, Decimal('10'), Decimal('5'), Decimal('5')),
+    (subtract, Decimal('-10'), Decimal('5'), Decimal('-15')),
+    (multiply, Decimal('10'), Decimal('5'), Decimal('50')),
+    (multiply, Decimal('-10'), Decimal('5'), Decimal('-50')),
+    (divide, Decimal('10'), Decimal('5'), Decimal('2')),
+    (divide, Decimal('-10'), Decimal('5'), Decimal('-2')),
+])
+def test_operations(operation, first_number, second_number, expected):
+    """Test all basic operations"""
+    assert operation(first_number, second_number) == expected
 
-def test_subtraction_operation():
-    calc = CalcOperation(Decimal('25'), Decimal('10'), subtract_operands)
-    assert calc.execute() == Decimal('15')
-
-def test_multiplication_operation():
-    calc = CalcOperation(Decimal('25'), Decimal('5'), multiply_operands)
-    assert calc.execute() == Decimal('125')
-
-def test_division_operation():
-    calc = CalcOperation(Decimal('25'), Decimal('5'), divide_operands)
-    assert calc.execute() == Decimal('5')
-
-def test_division_by_zero():
-    with pytest.raises(ValueError, match="Cannot divide by zero"):
-        calc = CalcOperation(Decimal('25'), Decimal('0'), divide_operands)
-        calc.execute()
+def test_divide_by_zero():
+    """Test division by zero raises error"""
+    with pytest.raises(ZeroDivisionError):
+        divide(Decimal('10'), Decimal('0'))
+        

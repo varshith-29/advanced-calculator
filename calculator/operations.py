@@ -1,19 +1,20 @@
 from decimal import Decimal
+from typing import Callable
 
-def add_operands(operand1: Decimal, operand2: Decimal) -> Decimal:
-    """Return the sum of two operands."""
-    return operand1 + operand2
+def add(a: Decimal, b: Decimal) -> Decimal:
+    """Performs addition"""
+    return a + b
 
-def subtract_operands(operand1: Decimal, operand2: Decimal) -> Decimal:
-    """Return the difference between two operands."""
-    return operand1 - operand2
+def subtract(a: Decimal, b: Decimal) -> Decimal:
+    """Performs subtraction"""
+    return a - b
 
-def multiply_operands(operand1: Decimal, operand2: Decimal) -> Decimal:
-    """Return the product of two operands."""
-    return operand1 * operand2
+def multiply(a: Decimal, b: Decimal) -> Decimal:
+    """Performs multiplication"""
+    return a * b
 
-def divide_operands(operand1: Decimal, operand2: Decimal) -> Decimal:
-    """Return the quotient of two operands, raises an error if dividing by zero."""
-    if operand2 == 0:
-        raise ValueError("Cannot divide by zero")
-    return operand1 / operand2
+def divide(a: Decimal, b: Decimal) -> Decimal:
+    """Performs division"""
+    if b == Decimal('0'):
+        raise ZeroDivisionError("Division by zero is undefined")
+    return a / b
