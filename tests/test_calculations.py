@@ -1,3 +1,4 @@
+"""Test cases for calculation classes."""
 from calculator.operations import add, multiply, subtract, divide
 
 def test_addition():

@@ -1,3 +1,4 @@
+"""Test cases for the Calculator class."""
 from calculator import Calculator
 
 def test_calculator_add():
