@@ -1,2 +1,2 @@
-# Homework 3 - Improved Calculator
-This is my repository for homework-3
+# Homework 4 - Faker and Command Line
+This is my repository for homework-4
